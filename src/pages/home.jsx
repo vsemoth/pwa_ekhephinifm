@@ -7,14 +7,37 @@ export default class extends React.Component {
 
   constructor () {
     super();
+    this.state = { showButton: false };
+    this.onInstallBtnClicked = this.onInstallBtnClicked.bind(this);
   }
 
   componentDidMount() {
+    let deferredPrompt;
 
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      this.deferredPrompt = e;
+      this.setState({ showButton: true });
+    });
   }
+
+  onInstallBtnClicked() {
+    this.setState({ showButton: false });
+    this.deferredPrompt.prompt();
+    this.deferredPrompt.userChoice.then((choiceResult) => {
+      if (choiceResult.outcome === 'accepted') {
+        console.log('User accepted the install prompt');
+      } else {
+        console.log('User dismissed the install prompt');
+      }
+      this.defferedPrompt = null;
+    });
+  }
+
    render () {
     return (
     <Page name="home">
+      <div align="center">
       <BlockTitle>Ekhephini FM | Livestream</BlockTitle>
       <Block strong>
         <img src={f7logo} height="168" width="256" alt="" />
@@ -24,7 +47,14 @@ export default class extends React.Component {
           autoPlay
           controls
         />
+        <br />
+        <script>
+        if (window.addEventListener('appinstalled') === true) {
+         <Button style={{ color: "#fff", background: "#00811F" }} onClick={this.onInstallBtnClicked}>Install this App</Button>
+        }
+        </script>
       </Block>
+      </div>
     </Page>     
     );
    }
