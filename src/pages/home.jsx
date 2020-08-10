@@ -48,11 +48,7 @@ export default class extends React.Component {
           controls
         />
         <br />
-        <script>
-        if (window.addEventListener('appinstalled') === true) {
          <Button style={{ color: "#fff", background: "#00811F" }} onClick={this.onInstallBtnClicked}>Install this App</Button>
-        }
-        </script>
       </Block>
       </div>
     </Page>     
